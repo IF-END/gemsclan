@@ -1,212 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import { Users, ShieldCheck, MessageSquare, Sword, Award, CheckCircle2, ExternalLink, ChevronRight, Gem, Ban, Clock, Monitor } from 'lucide-react';
-
-// ---------------------------------------------------------
-// 공유하기 전, 아래 DISCORD_LINK를 실제 초대 주소로 바꾸세요!
-// ---------------------------------------------------------
-const DISCORD_LINK = "https://discord.gg/your-actual-link"; 
-
-const App = () => {
-  const [gems, setGems] = useState([]);
-
-  useEffect(() => {
-    const newGems = Array.from({ length: 15 }).map((_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      size: Math.random() * 20 + 10,
-      duration: Math.random() * 20 + 10,
-      delay: Math.random() * 5,
-      opacity: Math.random() * 0.3 + 0.1
-    }));
-    setGems(newGems);
-  }, []);
-
-  const handleJoinClick = () => {
-    window.open(DISCORD_LINK, '_blank');
-  };
-
-  return (
-    <div className="min-h-screen bg-[#0d0b1a] text-slate-200 font-sans selection:bg-purple-500/30 overflow-x-hidden">
-      {/* Floating Gems Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        {gems.map((gem) => (
-          <div
-            key={gem.id}
-            className="absolute animate-float text-purple-400"
-            style={{
-              left: `${gem.left}%`,
-              top: `${gem.top}%`,
-              opacity: gem.opacity,
-              animationDuration: `${gem.duration}s`,
-              animationDelay: `${gem.delay}s`,
-            }}
-          >
-            <Gem size={gem.size} fill="currentColor" />
-          </div>
-        ))}
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-purple-600/20 blur-[120px] rounded-full" />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-600/20 blur-[120px] rounded-full" />
-      </div>
-
-      {/* Header Navigation */}
-      <nav className="relative z-10 flex justify-between items-center px-6 py-6 border-b border-white/5 backdrop-blur-md sticky top-0 shadow-2xl">
-        <div className="flex gap-4 text-[10px] font-bold tracking-widest text-blue-400 uppercase">
-          <span>Discord</span>
-          <span>Kakao</span>
-          <span>Pubg</span>
-        </div>
-        <div className="text-[10px] font-bold tracking-widest text-amber-400 uppercase flex items-center gap-1">
-          <Award size={10} /> Premium Clan
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <header className="relative z-10 pt-16 pb-12 text-center px-6">
-        <div className="inline-block relative mb-4">
-            <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-purple-500/20 blur-2xl rounded-full animate-pulse" />
-            <Gem size={48} className="mx-auto text-white drop-shadow-[0_0_20px_rgba(168,85,247,1)]" fill="rgba(255,255,255,0.1)" />
-        </div>
-        
-        <h1 className="text-7xl md:text-8xl font-black mb-2 tracking-[0.15em] text-white">
-          GEMS
-        </h1>
-        <div className="text-xl font-bold tracking-[0.5em] text-amber-500 mb-10">
-            CLAN
-        </div>
-
-        <div className="w-full max-w-xs mx-auto h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent mb-10" />
-
-        <div className="space-y-4 animate-fade-in-up">
-            <h2 className="text-2xl font-bold text-white tracking-wider">WELCOME!</h2>
-            <h3 className="text-lg font-bold text-amber-400">당신의 가치를 증명할 GEMS Clan</h3>
-            <p className="text-xs text-slate-400 max-w-[280px] mx-auto leading-relaxed opacity-80">
-                우리는 전장에서 가장 눈부신 순간을 함께 만듭니다.<br/>
-                최고의 팀워크로 보석처럼 단단한 승리를 쟁취하세요.
-            </p>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="relative z-10 container mx-auto max-w-md px-6 pb-24 space-y-12">
-        
-        {/* Recruit Info Section */}
-        <section className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          <div className="text-center mb-6">
-            <h2 className="inline-block px-10 py-2 border-y border-amber-500/30 text-sm font-black tracking-[0.2em] italic text-white uppercase">
-                RECRUIT INFO
-            </h2>
-          </div>
-
-          <div className="space-y-2">
-            {[
-              { label: "나이제한", value: "20세 이상 성인", icon: <Users size={16} />, color: "border-l-amber-500" },
-              { label: "딜량제한", value: "제한 없음", icon: <Sword size={16} />, color: "border-l-cyan-500" },
-              { label: "필수사항", value: "디스코드 / 닉네임 변경", icon: <MessageSquare size={16} />, color: "border-l-purple-500" },
-              { label: "플랫폼", value: "카카오 배틀그라운드", icon: <Monitor size={16} />, color: "border-l-orange-500" }
-            ].map((item, idx) => (
-              <div key={idx} className={`flex items-center justify-between p-4 bg-white/5 border-l-4 ${item.color} rounded-r-xl backdrop-blur-sm border-y border-r border-white/5`}>
-                <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-tight">
-                  <span className="text-slate-400">{item.icon}</span>
-                  <span className="text-slate-300">{item.label}</span>
-                </div>
-                <div className="text-xs font-bold text-white italic">{item.value}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Restrictions Section */}
-        <section className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-          <div className="text-center mb-6">
-            <h2 className="inline-block px-10 py-2 border-y border-amber-500/30 text-sm font-black tracking-[0.2em] italic text-white uppercase">
-                RESTRICTIONS
-            </h2>
-          </div>
-
-          <div className="bg-red-500/5 border border-red-500/20 rounded-2xl p-6 space-y-6 backdrop-blur-sm">
-            <div className="flex gap-4">
-                <Ban className="text-red-500 shrink-0" size={18} />
-                <h4 className="text-red-500 font-black text-xs uppercase tracking-tight leading-tight">불법 프로그램 (적발 시 즉시추방)</h4>
-            </div>
-            <div className="flex gap-4">
-                <Users className="text-orange-500 shrink-0" size={18} />
-                <div className="space-y-1">
-                    <h4 className="text-orange-500 font-black text-xs uppercase tracking-tight leading-tight">남미새 / 여미새 등 분위기 저해 행위</h4>
-                    <p className="text-[10px] text-slate-500">(경고 없이 즉시 추방 대상이 될 수 있음)</p>
-                </div>
-            </div>
-
-            <div className="pt-4 border-t border-white/5">
-                <div className="flex items-center justify-center gap-3 text-cyan-400 mb-2">
-                    <Clock size={16} />
-                    <span className="text-lg font-black tracking-tighter">PM 06:00 ~ AM 12:00</span>
-                </div>
-                <p className="text-[10px] text-slate-500 text-center uppercase tracking-[0.2em]">문의 상담 집중 시간대</p>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Button */}
-        <div className="pt-6 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-            <button 
-                className="w-full group relative p-[1px] rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-2xl shadow-purple-500/20"
-                onClick={handleJoinClick}
-            >
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-500 via-purple-500 to-cyan-500 animate-gradient-x" />
-                <div className="relative bg-[#1a1829] px-8 py-5 rounded-2xl flex items-center justify-center gap-3">
-                    <Gem size={20} className="text-amber-400 group-hover:rotate-[360deg] transition-transform duration-700" />
-                    <span className="text-lg font-black tracking-[0.1em] text-white uppercase">Join GEMS Clan</span>
-                    <ExternalLink size={18} className="text-slate-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </div>
-            </button>
-            <p className="text-center text-[10px] text-slate-500 mt-4 uppercase tracking-widest opacity-50 italic">
-              Click to Join our Official Discord Server
-            </p>
-        </div>
-
-      </main>
-
-      {/* Footer */}
-      <footer className="relative z-10 py-12 text-center border-t border-white/5 bg-black/40">
-        <div className="flex items-center justify-center gap-2 mb-4 opacity-30">
-          <Gem size={12} />
-          <div className="w-8 h-px bg-slate-700" />
-          <Gem size={12} />
-        </div>
-        <div className="text-[10px] font-bold tracking-[0.3em] text-slate-600 uppercase">
-          © 2026 GEMS Premium Clan Organization
-        </div>
-      </footer>
-
-      {/* Custom Keyframes */}
-      <style>{`
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEMS Clan - PUBG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: white; overflow-x: hidden; }
+        .gem { position: absolute; pointer-events: none; opacity: 0.5; filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.5)); }
         @keyframes float {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(10deg); }
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
         }
-        .animate-float {
-          animation: float infinite ease-in-out;
-        }
-        @keyframes gradient-x {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-gradient-x {
-          background-size: 200% 200%;
-          animation: gradient-x 3s linear infinite;
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
-          opacity: 0;
-        }
-      `}</style>
-    </div>
-  );
-};
+    </style>
+</head>
+<body>
+    <div id="gem-container" class="fixed inset-0 z-0"></div>
 
-export default App;
+    <div class="relative z-10 min-h-screen">
+        <nav class="p-6 flex justify-between items-center bg-slate-900/50 backdrop-blur-md sticky top-0">
+            <h1 class="text-2xl font-bold tracking-tighter text-cyan-400">GEMS CLAN</h1>
+            <div class="space-x-6 text-sm font-medium">
+                <a href="#" class="hover:text-cyan-400 transition">Discord</a>
+                <a href="#" class="hover:text-cyan-400 transition">Kakao</a>
+                <a href="#" class="bg-cyan-500 px-4 py-2 rounded-full text-slate-900 hover:bg-cyan-400 transition">Join Us</a>
+            </div>
+        </nav>
+
+        <main class="max-w-4xl mx-auto mt-20 px-6 pb-20 text-center">
+            <h2 class="text-5xl font-black mb-6">당신의 가치를 증명할 <span class="text-cyan-400">GEMS Clan</span></h2>
+            <p class="text-slate-400 text-lg mb-12">우리는 전장에서 가장 눈부신 순간을 함께 만듭니다.<br>최고의 팀워크로 보석처럼 단단한 승리를 쟁취하세요.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16 text-left">
+                <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                    <h3 class="text-cyan-400 font-bold mb-2">나이제한</h3>
+                    <p>20세 이상 성인 (군필 우대)</p>
+                </div>
+                <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                    <h3 class="text-cyan-400 font-bold mb-2">딜량제한</h3>
+                    <p>제한 없음 (열정 위주 선발)</p>
+                </div>
+                <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                    <h3 class="text-cyan-400 font-bold mb-2">필수사항</h3>
+                    <p>디스코드 사용 및 닉네임 변경 가능자</p>
+                </div>
+                <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                    <h3 class="text-cyan-400 font-bold mb-2">활동서버</h3>
+                    <p>카카오 배틀그라운드 메인</p>
+                </div>
+            </div>
+
+            <button onclick="window.open('https://discord.gg/your-link')" class="text-xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 px-12 py-4 rounded-xl hover:scale-105 transition-transform shadow-lg shadow-cyan-500/20">
+                클랜 가입 신청하기
+            </button>
+        </main>
+    </div>
+
+    <script>
+        // 배경 보석 생성 스크립트
+        const container = document.getElementById('gem-container');
+        for (let i = 0; i < 15; i++) {
+            const gem = document.createElement('div');
+            gem.className = 'gem';
+            gem.innerHTML = '💎';
+            gem.style.left = Math.random() * 100 + '%';
+            gem.style.top = Math.random() * 100 + '%';
+            gem.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            gem.style.animation = `float ${Math.random() * 5 + 5}s infinite ease-in-out`;
+            container.appendChild(gem);
+        }
+    </script>
+</body>
+</html>
