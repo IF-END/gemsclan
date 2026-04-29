@@ -18,6 +18,9 @@
         .animate-gradient-x { background-size: 200% 200%; animation: gradient-x 3s linear infinite; }
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; opacity: 0; }
+        
+        /* 스크롤바 숨기기 */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
     </style>
 </head>
 <body>
@@ -25,9 +28,12 @@
 
     <script type="text/babel">
         const { useState, useEffect } = React;
-        const DISCORD_LINK = "https://discord.gg/WPmbqth7";; 
+        
+        // --- 설정: 링크 정보 ---
+        const DISCORD_LINK = "https://discord.gg/WPmbqth7";
+        const KAKAO_LINK = "https://open.kakao.com/o/g3kXSbhi"; // 업데이트된 오픈톡 링크
+        // ------------------------------------
 
-        // 아이콘 렌더링 안정화 컴포넌트
         const Icon = ({ name, size = 16, className = "" }) => {
             useEffect(() => {
                 try { if (window.lucide) window.lucide.createIcons(); } catch (e) { console.error(e); }
@@ -94,7 +100,7 @@
                         </div>
                     </header>
 
-                    {/* 카드 정보 섹션 */}
+                    {/* 정보 섹션 */}
                     <main className="relative z-10 container mx-auto max-w-md px-6 pb-24 space-y-12">
                         <section className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                             <div className="text-center mb-8">
@@ -118,14 +124,39 @@
                             </div>
                         </section>
 
-                        {/* 가입 신청 버튼 */}
-                        <div className="pt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                            <button onClick={() => window.open(DISCORD_LINK)} className="w-full group relative p-[1.5px] rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-2xl shadow-purple-500/20">
-                                <div className="absolute inset-0 bg-gradient-to-r from-amber-500 via-purple-600 to-cyan-500 animate-gradient-x" />
-                                <div className="relative bg-[#1a1829] px-8 py-6 rounded-2xl flex items-center justify-center gap-4">
-                                    <Icon name="gem" size={24} className="text-amber-400 group-hover:rotate-[360deg] transition-all duration-1000" />
-                                    <span className="text-lg md:text-xl font-black text-white tracking-widest uppercase">JOIN GEMS CLAN</span>
-                                    <Icon name="external-link" size={20} className="text-slate-500" />
+                        {/* 가입 신청 버튼 섹션 */}
+                        <div className="space-y-4 pt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                            <div className="text-center mb-6">
+                                <span className="text-[10px] font-black tracking-[0.2em] text-slate-500 uppercase italic">Contact Channels</span>
+                            </div>
+
+                            {/* 디스코드 버튼 */}
+                            <button onClick={() => window.open(DISCORD_LINK)} className="w-full group relative p-[1.5px] rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-indigo-500/10">
+                                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 animate-gradient-x" />
+                                <div className="relative bg-[#1a1829] px-8 py-5 rounded-2xl flex items-center justify-between gap-4">
+                                    <div className="flex items-center gap-4">
+                                        <Icon name="message-square" size={24} className="text-indigo-400" />
+                                        <div className="text-left">
+                                            <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-tighter">Official Community</p>
+                                            <span className="text-sm md:text-base font-black text-white tracking-widest uppercase">DISCORD SERVER</span>
+                                        </div>
+                                    </div>
+                                    <Icon name="external-link" size={18} className="text-slate-500" />
+                                </div>
+                            </button>
+
+                            {/* 카카오톡 버튼 */}
+                            <button onClick={() => window.open(KAKAO_LINK)} className="w-full group relative p-[1.5px] rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-yellow-500/10">
+                                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 animate-gradient-x" />
+                                <div className="relative bg-[#1a1829] px-8 py-5 rounded-2xl flex items-center justify-between gap-4">
+                                    <div className="flex items-center gap-4">
+                                        <Icon name="message-circle" size={24} className="text-yellow-400" />
+                                        <div className="text-left">
+                                            <p className="text-[10px] font-bold text-yellow-400 uppercase tracking-tighter">Fast Inquiries</p>
+                                            <span className="text-sm md:text-base font-black text-white tracking-widest uppercase">KAKAO OPEN TALK</span>
+                                        </div>
+                                    </div>
+                                    <Icon name="external-link" size={18} className="text-slate-500" />
                                 </div>
                             </button>
                         </div>
