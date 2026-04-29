@@ -11,7 +11,14 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #0d0b1a; color: #e2e8f0; margin: 0; overflow-x: hidden; }
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            background-color: #0d0b1a; 
+            color: #e2e8f0; 
+            margin: 0; 
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
         @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
         .animate-float { animation: float infinite ease-in-out; }
         @keyframes gradient-x { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
@@ -19,8 +26,12 @@
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; opacity: 0; }
         
-        /* 스크롤바 숨기기 */
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        .vertical-text { writing-mode: vertical-lr; text-orientation: mixed; }
+        
+        /* 스크롤바 디자인 */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0d0b1a; }
+        ::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -29,9 +40,10 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
         
-        // --- 설정: 링크 정보 ---
+        // --- 설정: 링크 및 클랜 정보 ---
         const DISCORD_LINK = "https://discord.gg/WPmbqth7";
-        const KAKAO_LINK = "https://open.kakao.com/o/g3kXSbhi"; // 업데이트된 오픈톡 링크
+        const KAKAO_LINK = "https://open.kakao.com/o/g3kXSbhi";
+        const CLAN_MASTER = "Gems_Fedora";
         // ------------------------------------
 
         const Icon = ({ name, size = 16, className = "" }) => {
@@ -58,6 +70,19 @@
 
             return (
                 <div className="min-h-screen relative selection:bg-purple-500/30 flex flex-col">
+                    
+                    {/* [Left Sidebar] Clan Master - 시그니처 배지 */}
+                    <div className="hidden xl:flex fixed left-12 top-0 bottom-0 flex-col items-center justify-center gap-8 z-20 animate-fade-in-up">
+                        <div className="h-32 w-px bg-gradient-to-b from-transparent via-amber-500/40 to-amber-500"></div>
+                        <div className="vertical-text text-[10px] font-black tracking-[0.8em] text-amber-500/50 uppercase rotate-180 mb-2">
+                            Clan Master
+                        </div>
+                        <div className="vertical-text text-2xl font-black tracking-[0.2em] text-white uppercase italic drop-shadow-[0_0_20px_rgba(255,191,0,0.6)]">
+                            {CLAN_MASTER}
+                        </div>
+                        <div className="h-32 w-px bg-gradient-to-t from-transparent via-amber-500/40 to-amber-500"></div>
+                    </div>
+
                     {/* 배경 레이어 */}
                     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
                         {gems.map(gem => (
@@ -71,7 +96,7 @@
                     </div>
 
                     {/* 상단 네비게이션 */}
-                    <nav className="relative z-10 flex justify-between items-center px-6 md:px-12 py-6 border-b border-white/5 backdrop-blur-md sticky top-0 shadow-2xl">
+                    <nav className="relative z-30 flex justify-between items-center px-6 md:px-12 py-6 border-b border-white/5 backdrop-blur-md sticky top-0 shadow-2xl">
                         <div className="flex gap-4 text-[10px] font-bold tracking-widest text-blue-400 uppercase">
                             <span>Discord</span><span>Kakao</span><span>Pubg</span>
                         </div>
@@ -80,89 +105,101 @@
                         </div>
                     </nav>
 
-                    {/* 메인 헤더 */}
-                    <header className="relative z-10 pt-16 md:pt-24 pb-12 text-center px-6">
-                        <div className="inline-block relative mb-6">
-                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-purple-500/20 blur-2xl rounded-full animate-pulse" />
-                            <Icon name="gem" size={56} className="text-white drop-shadow-[0_0_20px_rgba(168,85,247,1)]" />
-                        </div>
-                        <h1 className="text-6xl md:text-8xl font-black mb-2 tracking-[0.1em] md:tracking-[0.15em] text-white">GEMS</h1>
-                        <div className="text-lg md:text-xl font-bold tracking-[0.4em] md:tracking-[0.5em] text-amber-500 mb-10 md:mb-12">CLAN</div>
-                        <div className="w-full max-w-xs mx-auto h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent mb-10 md:mb-12" />
+                    {/* 메인 콘텐츠 */}
+                    <div className="relative z-10 flex-grow w-full max-w-7xl mx-auto flex flex-col items-center">
                         
-                        <div className="space-y-4 animate-fade-in-up px-4">
-                            <h2 className="text-2xl md:text-3xl font-bold text-white tracking-wider uppercase">Welcome!</h2>
-                            <h3 className="text-base md:text-lg font-bold text-amber-400">당신의 가치를 증명할 GEMS Clan</h3>
-                            <p className="text-xs md:text-sm text-slate-400 max-w-md mx-auto leading-relaxed opacity-80">
-                                우리는 전장에서 가장 눈부신 순간을 함께 만듭니다.<br/>
-                                최고의 팀워크로 보석처럼 단단한 승리를 쟁취하세요.
-                            </p>
-                        </div>
-                    </header>
-
-                    {/* 정보 섹션 */}
-                    <main className="relative z-10 container mx-auto max-w-md px-6 pb-24 space-y-12">
-                        <section className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                            <div className="text-center mb-8">
-                                <h2 className="inline-block px-10 py-2 border-y border-amber-500/30 text-xs md:text-sm font-black tracking-[0.3em] italic text-white uppercase">RECRUIT INFO</h2>
+                        {/* 메인 헤더 */}
+                        <header className="pt-16 md:pt-24 pb-12 text-center px-6 w-full">
+                            <div className="inline-block relative mb-6">
+                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-purple-500/20 blur-2xl rounded-full animate-pulse" />
+                                <Icon name="gem" size={56} className="text-white drop-shadow-[0_0_20px_rgba(168,85,247,1)]" />
                             </div>
-                            <div className="space-y-3">
-                                {[
-                                    { label: "나이제한", value: "20세 이상 성인", icon: "users", color: "border-l-amber-500" },
-                                    { label: "딜량제한", value: "제한 없음 (열정 위주)", icon: "swords", color: "border-l-cyan-500" },
-                                    { label: "필수사항", value: "디스코드 / 닉네임 변경", icon: "message-square", color: "border-l-purple-500" },
-                                    { label: "플랫폼", value: "카카오 배틀그라운드", icon: "monitor", color: "border-l-orange-500" }
-                                ].map((item, i) => (
-                                    <div key={i} className={`flex items-center justify-between p-5 bg-white/5 border-l-4 ${item.color} rounded-r-2xl backdrop-blur-sm border border-white/5 shadow-inner`}>
-                                        <div className="flex items-center gap-3 text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">
-                                            <Icon name={item.icon} size={16} />
-                                            <span>{item.label}</span>
-                                        </div>
-                                        <div className="text-xs md:text-sm font-black text-white italic">{item.value}</div>
-                                    </div>
-                                ))}
+                            <h1 className="text-6xl md:text-8xl font-black mb-2 tracking-[0.1em] md:tracking-[0.15em] text-white">GEMS</h1>
+                            <div className="text-lg md:text-xl font-bold tracking-[0.4em] md:tracking-[0.5em] text-amber-500 mb-10 md:mb-12">CLAN</div>
+                            <div className="w-full max-w-xs mx-auto h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent mb-10 md:mb-12" />
+                            
+                            <div className="space-y-4 animate-fade-in-up px-4">
+                                <h2 className="text-2xl md:text-3xl font-bold text-white tracking-wider uppercase">Welcome!</h2>
+                                <h3 className="text-base md:text-lg font-bold text-amber-400">당신의 가치를 증명할 GEMS Clan</h3>
+                                <p className="text-xs md:text-sm text-slate-400 max-w-md mx-auto leading-relaxed opacity-80">
+                                    우리는 전장에서 가장 눈부신 순간을 함께 만듭니다.<br/>
+                                    최고의 팀워크로 보석처럼 단단한 승리를 쟁취하세요.
+                                </p>
                             </div>
-                        </section>
+                        </header>
 
-                        {/* 가입 신청 버튼 섹션 */}
-                        <div className="space-y-4 pt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                            <div className="text-center mb-6">
-                                <span className="text-[10px] font-black tracking-[0.2em] text-slate-500 uppercase italic">Contact Channels</span>
-                            </div>
-
-                            {/* 디스코드 버튼 */}
-                            <button onClick={() => window.open(DISCORD_LINK)} className="w-full group relative p-[1.5px] rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-indigo-500/10">
-                                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 animate-gradient-x" />
-                                <div className="relative bg-[#1a1829] px-8 py-5 rounded-2xl flex items-center justify-between gap-4">
-                                    <div className="flex items-center gap-4">
-                                        <Icon name="message-square" size={24} className="text-indigo-400" />
-                                        <div className="text-left">
-                                            <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-tighter">Official Community</p>
-                                            <span className="text-sm md:text-base font-black text-white tracking-widest uppercase">DISCORD SERVER</span>
-                                        </div>
-                                    </div>
-                                    <Icon name="external-link" size={18} className="text-slate-500" />
+                        {/* 정보 섹션 */}
+                        <main className="container mx-auto max-w-md px-6 pb-24 space-y-12 w-full">
+                            {/* 모바일용 마스터 정보 (화면 좁을 때만 노출) */}
+                            <div className="xl:hidden animate-fade-in-up text-center mb-[-1rem]">
+                                <div className="inline-flex flex-col items-center gap-1 px-6 py-3 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm shadow-xl">
+                                    <span className="text-[10px] font-black text-amber-500/70 uppercase tracking-[0.3em]">Clan Master</span>
+                                    <span className="text-xl font-black text-white italic tracking-wider uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">{CLAN_MASTER}</span>
                                 </div>
-                            </button>
+                            </div>
 
-                            {/* 카카오톡 버튼 */}
-                            <button onClick={() => window.open(KAKAO_LINK)} className="w-full group relative p-[1.5px] rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-yellow-500/10">
-                                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 animate-gradient-x" />
-                                <div className="relative bg-[#1a1829] px-8 py-5 rounded-2xl flex items-center justify-between gap-4">
-                                    <div className="flex items-center gap-4">
-                                        <Icon name="message-circle" size={24} className="text-yellow-400" />
-                                        <div className="text-left">
-                                            <p className="text-[10px] font-bold text-yellow-400 uppercase tracking-tighter">Fast Inquiries</p>
-                                            <span className="text-sm md:text-base font-black text-white tracking-widest uppercase">KAKAO OPEN TALK</span>
-                                        </div>
-                                    </div>
-                                    <Icon name="external-link" size={18} className="text-slate-500" />
+                            <section className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                                <div className="text-center mb-8">
+                                    <h2 className="inline-block px-10 py-2 border-y border-amber-500/30 text-xs md:text-sm font-black tracking-[0.3em] italic text-white uppercase">RECRUIT INFO</h2>
                                 </div>
-                            </button>
-                        </div>
-                    </main>
+                                <div className="space-y-3">
+                                    {[
+                                        { label: "나이제한", value: "20세 이상 성인", icon: "users", color: "border-l-amber-500" },
+                                        { label: "딜량제한", value: "제한 없음 (열정 위주)", icon: "swords", color: "border-l-cyan-500" },
+                                        { label: "필수사항", value: "디스코드 / 닉네임 변경", icon: "message-square", color: "border-l-purple-500" },
+                                        { label: "플랫폼", value: "카카오 배틀그라운드", icon: "monitor", color: "border-l-orange-500" }
+                                    ].map((item, i) => (
+                                        <div key={i} className={`flex items-center justify-between p-5 bg-white/5 border-l-4 ${item.color} rounded-r-2xl backdrop-blur-sm border border-white/5 shadow-inner`}>
+                                            <div className="flex items-center gap-3 text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">
+                                                <Icon name={item.icon} size={16} />
+                                                <span>{item.label}</span>
+                                            </div>
+                                            <div className="text-xs md:text-sm font-black text-white italic">{item.value}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
 
-                    <footer className="relative z-10 py-16 text-center border-t border-white/5 bg-black/40 mt-auto">
+                            {/* 가입 신청 버튼 섹션 */}
+                            <div className="space-y-4 pt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                                <div className="text-center mb-6">
+                                    <span className="text-[10px] font-black tracking-[0.2em] text-slate-500 uppercase italic">Contact Channels</span>
+                                </div>
+
+                                {/* 디스코드 버튼 */}
+                                <button onClick={() => window.open(DISCORD_LINK)} className="w-full group relative p-[1.5px] rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-indigo-500/10">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 animate-gradient-x" />
+                                    <div className="relative bg-[#1a1829] px-8 py-5 rounded-2xl flex items-center justify-between gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <Icon name="message-square" size={24} className="text-indigo-400" />
+                                            <div className="text-left">
+                                                <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-tighter">Official Community</p>
+                                                <span className="text-sm md:text-base font-black text-white tracking-widest uppercase">DISCORD SERVER</span>
+                                            </div>
+                                        </div>
+                                        <Icon name="external-link" size={18} className="text-slate-500" />
+                                    </div>
+                                </button>
+
+                                {/* 카카오톡 버튼 */}
+                                <button onClick={() => window.open(KAKAO_LINK)} className="w-full group relative p-[1.5px] rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-yellow-500/10">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 animate-gradient-x" />
+                                    <div className="relative bg-[#1a1829] px-8 py-5 rounded-2xl flex items-center justify-between gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <Icon name="message-circle" size={24} className="text-yellow-400" />
+                                            <div className="text-left">
+                                                <p className="text-[10px] font-bold text-yellow-400 uppercase tracking-tighter">Fast Inquiries</p>
+                                                <span className="text-sm md:text-base font-black text-white tracking-widest uppercase">KAKAO OPEN TALK</span>
+                                            </div>
+                                        </div>
+                                        <Icon name="external-link" size={18} className="text-slate-500" />
+                                    </div>
+                                </button>
+                            </div>
+                        </main>
+                    </div>
+
+                    <footer className="relative z-30 py-16 text-center border-t border-white/5 bg-black/40 mt-auto">
                         <p className="text-[10px] font-bold tracking-[0.4em] text-slate-600 uppercase italic">© 2026 GEMS Premium Clan Organization</p>
                     </footer>
                 </div>
