@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>GEMS CLAN - 같이 먹자 치킨!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;700;900&display=swap');
+        
+        :root {
+            --gem-gold: #ffcc00;
+            --bg-deep: #08080a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            background-color: var(--bg-deep); 
+            color: #f1f5f9; 
+            margin: 0; 
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .font-tactical { font-family: 'Orbitron', sans-serif; }
+
+        .battle-gem-bg {
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(255,204,0,0.05) 0%, transparent 50%),
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .text-shimmer {
+            background: linear-gradient(90deg, #fff, var(--gem-gold), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 5s linear infinite;
+        }
+
+        @keyframes spark {
+            0% { transform: translate(0,0) scale(1); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(60px,-150px) scale(0); opacity: 0; }
+        }
+        .ember {
+            position: absolute;
+            background: var(--gem-gold);
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(1px);
+            animation: spark linear infinite;
+        }
+
+        .gem-cut-panel {
+            background: rgba(20,20,25,0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,204,0,0.15);
+            position: relative;
+            clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+        }
+        .gem-cut-panel::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gem-gold), transparent);
+            opacity: 0.5;
+        }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
+
+        .vertical-text { writing-mode: vertical-lr; text-orientation: mixed; }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--gem-gold); border-radius: 10px; }
+
+        .btn-hover { transition: transform 0.15s; display: block; width: 100%; }
+        .btn-hover:active { transform: scale(0.97); }
+
+        .card-item { transition: transform 0.2s; }
+
+        /* 네비 링크 */
+        .nav-link { cursor: pointer; transition: color 0.2s; color: #94a3b8; }
+        .nav-link:hover { color: #f59e0b; }
+
+        /* 모바일 전용 */
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .hero-title { font-size: clamp(4rem, 22vw, 7rem) !important; }
+            .hero-sub { font-size: clamp(0.55rem, 3vw, 0.85rem) !important; letter-spacing: 0.3em !important; }
+            .hero-h3 { font-size: clamp(1.3rem, 5.5vw, 2rem) !important; }
+            .hero-p { font-size: 0.88rem !important; }
+            .card-text { font-size: 0.92rem !important; }
+            .btn-label { font-size: 0.95rem !important; letter-spacing: 0.1em !important; }
+            .btn-inner { padding: 1rem 1.2rem !important; }
+            .btn-icon { width: 44px !important; height: 44px !important; font-size: 22px !important; flex-shrink: 0; }
+            .master-name { font-size: 1.4rem !important; }
+            .main-pad { padding: 0 1rem 5rem !important; }
+            .header-pt { padding-top: 4rem !important; padding-bottom: 1.5rem !important; }
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+    const DISCORD_LINK = "https://discord.gg/WPmbqth7";
+    const KAKAO_LINK   = "https://open.kakao.com/o/pyLQmLAi";
+    const CLAN_MASTER  = "Gems_Fedora";
+
+    function createEmbers() {
+        const wrap = document.querySelector('.ember-wrap');
+        if (!wrap) return;
+        const count = window.innerWidth < 640 ? 12 : 25;
+        for (let i = 0; i < count; i++) {
+            const e = document.createElement('div');
+            e.className = 'ember';
+            e.style.cssText = `
+                left:${Math.random()*100}%;
+                top:${Math.random()*100}%;
+                width:${Math.random()*3+1}px;
+                height:${Math.random()*3+1}px;
+                animation-duration:${Math.random()*4+3}s;
+                animation-delay:${Math.random()*5}s;
+                box-shadow:0 0 8px #ffcc00;
+            `;
+            wrap.appendChild(e);
+        }
+    }
+
+    const cards = [
+        { label:"멤버 조건",   value:"나이 : 20세 이상 성인 남녀",       grad:"linear-gradient(135deg,#92400e,#fbbf24)", icon:"👥" },
+        { label:"딜량 제한",   value:"딜량 : 제한없음 (누구든 환영!)",    grad:"linear-gradient(135deg,#065f46,#34d399)", icon:"⚔️" },
+        { label:"필수 준비물", value:"디스코드 + 닉네임 변경",            grad:"linear-gradient(135deg,#1e3a8a,#38bdf8)", icon:"📡" },
+        { label:"활동 서버",   value:"카카오 서버",                       grad:"linear-gradient(135deg,#991b1b,#fb923c)", icon:"🗺️" }
+    ];
+
+    document.getElementById('app').innerHTML = `
+    <div class="min-h-screen relative flex flex-col battle-gem-bg" style="overflow-x:hidden">
+
+        <!-- 불꽃 레이어 -->
+        <div class="ember-wrap" style="position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden"></div>
+
+        <!-- 사이드바 (lg 이상) -->
+        <div class="hidden lg:flex fixed left-12 top-0 bottom-0 flex-col items-center justify-center gap-12 z-20 animate-fade-in-up">
+            <div style="height:128px;width:1px;background:linear-gradient(to bottom,transparent,#f59e0b,#d97706)"></div>
+            <div class="flex flex-col items-center gap-6">
+                <div class="vertical-text font-tactical font-black text-white uppercase italic"
+                     style="font-size:2rem;letter-spacing:0.2em;filter:drop-shadow(0 0 20px rgba(255,204,0,0.5))">${CLAN_MASTER}</div>
+                <div class="vertical-text font-tactical font-black"
+                     style="font-size:9px;letter-spacing:1.2em;color:rgba(245,158,11,0.6);text-transform:uppercase">CLAN MASTER</div>
+            </div>
+            <div style="height:128px;width:1px;background:linear-gradient(to top,transparent,#f59e0b,#d97706)"></div>
+        </div>
+
+        <!-- 네비게이션 -->
+        <nav class="relative z-30 flex justify-between items-center px-4 sm:px-8 py-4 sticky top-0"
+             style="border-bottom:1px solid rgba(245,158,11,0.1);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)">
+            <div class="flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" class="animate-pulse" style="flex-shrink:0">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <div class="font-tactical font-black text-amber-500 uppercase" style="font-size:10px;letter-spacing:0.15em">GEMS CLAN 🎮</div>
+            </div>
+            <div class="nav-links flex gap-5 font-tactical font-black uppercase" style="font-size:10px;letter-spacing:0.12em">
+                <span class="nav-link">가입하기</span>
+                <span class="nav-link">클랜소개</span>
+                <span class="nav-link">명예의전당</span>
+            </div>
+        </nav>
+
+        <!-- 콘텐츠 -->
+        <div class="relative z-10 flex-grow w-full max-w-screen-xl mx-auto flex flex-col items-center">
+
+            <header class="header-pt pt-16 sm:pt-24 pb-10 sm:pb-20 text-center px-4 w-full max-w-3xl relative">
+                <!-- 배경 ELITE -->
+                <div class="absolute top-1/2 left-1/2 font-tactical font-black text-white select-none pointer-events-none"
+                     style="transform:translate(-50%,-50%);opacity:0.04;font-size:clamp(5rem,25vw,15rem);white-space:nowrap">ELITE</div>
+
+                <div class="relative mb-8">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5"
+                         class="mx-auto mb-4" style="filter:drop-shadow(0 0 24px rgba(255,204,0,0.8))">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <h1 class="hero-title font-tactical font-black italic leading-none text-shimmer"
+                        style="font-size:clamp(4.5rem,16vw,11rem);margin:0;letter-spacing:-0.05em">GEMS</h1>
+                    <div class="mt-3 flex items-center justify-center gap-3">
+                        <div style="height:1px;width:50px;background:linear-gradient(to right,transparent,rgba(245,158,11,0.5))"></div>
+                        <div class="hero-sub font-tactical font-bold text-amber-500 uppercase"
+                             style="font-size:clamp(0.6rem,2.5vw,1.2rem);letter-spacing:0.6em;opacity:0.8">Chicken Squad</div>
+                        <div style="height:1px;width:50px;background:linear-gradient(to left,transparent,rgba(245,158,11,0.5))"></div>
+                    </div>
+                </div>
+
+                <div class="animate-fade-in-up px-2" style="display:flex;flex-direction:column;gap:1.5rem">
+                    <h3 class="hero-h3 font-black text-white leading-tight"
+                        style="font-size:clamp(1.4rem,5vw,3rem);letter-spacing:-0.02em">
+                        GEMS CLAN과 함께하면 치킨이닭!
+                    </h3>
+                    <p class="hero-p text-slate-300 mx-auto font-light leading-relaxed"
+                       style="font-size:clamp(0.85rem,2vw,1.05rem);max-width:420px">
+                        어렵게 느끼지 마세요. GEMS는 실력보다 열정을 소중히 여기며,
+                        당신의 잠재력을 보석처럼 빛내드립니다.
+                    </p>
+                </div>
+            </header>
+
+            <main class="main-pad w-full" style="max-width:520px;padding:0 1.25rem 6rem;display:flex;flex-direction:column;gap:2.5rem">
+
+                <!-- 모바일 마스터 배지 -->
+                <div class="lg:hidden animate-fade-in-up text-center">
+                    <div class="gem-cut-panel inline-flex flex-col items-center gap-1 px-8 py-5">
+                        <span class="font-tactical font-black text-amber-500 uppercase"
+                              style="font-size:9px;letter-spacing:0.4em;margin-bottom:4px">클랜 마스터</span>
+                        <span class="master-name font-tactical font-black text-white italic uppercase"
+                              style="font-size:1.6rem;letter-spacing:0.12em;filter:drop-shadow(0 0 12px rgba(255,255,255,0.4))">${CLAN_MASTER}</span>
+                    </div>
+                </div>
+
+                <!-- 요구사항 카드 -->
+                <section class="animate-fade-in-up" style="animation-delay:0.2s">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div style="height:1px;flex:1;background:linear-gradient(to right,transparent,rgba(245,158,11,0.3))"></div>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(245,158,11,0.5)" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/>
+                            <line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
+                        </svg>
+                        <div style="height:1px;flex:1;background:linear-gradient(to left,transparent,rgba(245,158,11,0.3))"></div>
+                    </div>
+
+                    <div style="display:flex;flex-direction:column;gap:1rem">
+                        ${cards.map(item => `
+                        <div class="gem-cut-panel card-item" style="padding:1rem 1.25rem;overflow:hidden">
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem">
+                                <div style="display:flex;align-items:center;gap:1rem;min-width:0">
+                                    <div style="width:44px;height:44px;border-radius:8px;background:${item.grad};display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 12px rgba(0,0,0,0.5);flex-shrink:0">
+                                        ${item.icon}
+                                    </div>
+                                    <div style="min-width:0">
+                                        <div class="font-tactical font-black text-amber-500 uppercase"
+                                             style="font-size:10px;letter-spacing:0.15em;opacity:0.5;margin-bottom:3px">${item.label}</div>
+                                        <div class="card-text font-bold text-white italic"
+                                             style="font-size:0.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.value}</div>
+                                    </div>
+                                </div>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(245,158,11,0.25)" stroke-width="2" style="flex-shrink:0">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </div>
+                        </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- 버튼 -->
+                <div class="animate-fade-in-up" style="animation-delay:0.4s;display:flex;flex-direction:column;gap:1rem;padding-top:1.5rem">
+                    <div class="text-center font-tactical font-black text-slate-600 uppercase italic"
+                         style="font-size:10px;letter-spacing:0.5em">지금 바로 합류하기 🔥</div>
+
+                    <button onclick="window.open('${DISCORD_LINK}')" class="btn-hover gem-cut-panel"
+                            style="border:none;cursor:pointer;background:transparent;padding:3px;text-align:left">
+                        <div class="btn-inner" style="background:linear-gradient(to right,#1e1b4b,#312e81);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:0.75rem">
+                            <div style="display:flex;align-items:center;gap:1rem;min-width:0">
+                                <div class="btn-icon" style="width:48px;height:48px;border-radius:8px;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.1);font-size:24px;flex-shrink:0">💬</div>
+                                <div>
+                                    <p class="font-tactical font-black text-indigo-300 uppercase"
+                                       style="font-size:10px;letter-spacing:0.15em;margin:0 0 3px">클랜 디스코드</p>
+                                    <span class="btn-label font-tactical font-black text-white uppercase italic"
+                                          style="font-size:1rem;letter-spacing:0.15em">DISCORD CHANEL</span>
+                                </div>
+                            </div>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(165,180,252,0.5)" stroke-width="2" style="flex-shrink:0">
+                                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                        </div>
+                    </button>
+
+                    <button onclick="window.open('${KAKAO_LINK}')" class="btn-hover gem-cut-panel"
+                            style="border:none;cursor:pointer;background:transparent;padding:3px;text-align:left">
+                        <div class="btn-inner" style="background:linear-gradient(to right,#d97706,#fbbf24);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:0.75rem">
+                            <div style="display:flex;align-items:center;gap:1rem;min-width:0">
+                                <div class="btn-icon" style="width:48px;height:48px;border-radius:8px;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;border:1px solid rgba(251,191,36,0.2);font-size:24px;flex-shrink:0">💛</div>
+                                <div>
+                                    <p class="font-tactical font-black uppercase"
+                                       style="font-size:10px;letter-spacing:0.15em;color:rgba(0,0,0,0.6);margin:0 0 3px">바로 가입하기</p>
+                                    <span class="btn-label font-tactical font-black text-black uppercase italic"
+                                          style="font-size:1rem;letter-spacing:0.15em">카카오톡 오픈채팅</span>
+                                </div>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" style="flex-shrink:0">
+                                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+
+            </main>
+        </div>
+
+        <!-- 푸터 -->
+        <footer class="relative z-30 py-12 text-center mt-auto"
+                style="background:rgba(0,0,0,0.9);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(245,158,11,0.1)">
+            <div class="font-tactical font-black text-amber-500 uppercase"
+                 style="font-size:10px;letter-spacing:0.8em;opacity:0.3;margin-bottom:1rem">GEMS // 같이 치킨 먹자</div>
+            <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:0.5rem 1rem;font-size:9px;color:#374151;text-transform:uppercase;letter-spacing:0.1em;font-weight:700">
+                <span>함께라서 즐거운</span>
+                <span style="color:#78350f">•</span>
+                <span>치킨은 나눠야 맛있다</span>
+                <span style="color:#78350f">•</span>
+                <span>© 2026 GEMS CLAN</span>
+            </div>
+        </footer>
+
+    </div>
+    `;
+
+    createEmbers();
+</script>
+</body>
+</html>
